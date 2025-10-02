@@ -1,0 +1,4 @@
+project_id = "coescgifdazuenzzhenv"
+
+[functions.give-hype]
+verify_jwt = true
