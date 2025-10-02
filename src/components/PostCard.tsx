@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Flame } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { CommentsSection } from "./CommentsSection";
 
 interface PostCardProps {
   post: {
@@ -74,8 +75,7 @@ export const PostCard = ({ post, currentUserId, onHypeGiven }: PostCardProps) =>
   };
 
   return (
-    <div className="bg-card rounded-2xl overflow-hidden shadow-card border border-border">
-      {/* User Info */}
+    <div className="bg-card rounded-2xl overflow-hidden shadow-card border border-border hover-lift animate-slide-up">
       <div className="p-4 flex items-center gap-3">
         <Avatar className="w-10 h-10">
           <AvatarImage src={post.profiles.avatar_url || ""} />
@@ -88,25 +88,23 @@ export const PostCard = ({ post, currentUserId, onHypeGiven }: PostCardProps) =>
         </div>
       </div>
 
-      {/* Image */}
       <img
         src={post.image_url}
         alt="Post"
         className="w-full aspect-square object-cover"
       />
 
-      {/* Actions */}
       <div className="p-4 space-y-3">
         <div className="flex items-center justify-between">
           <Button
             onClick={handleGiveHype}
             disabled={giving || currentUserId === post.user_id}
-            className="bg-gradient-hype hover:opacity-90 text-black font-bold gap-2"
+            className="bg-gradient-hype hover:opacity-90 text-black font-bold gap-2 transition-all hover:scale-105"
           >
-            <Flame className="w-5 h-5" />
-            Give HYPE
+            <Flame className={`w-5 h-5 ${giving ? 'animate-bounce' : ''}`} />
+            {giving ? 'Giving...' : 'Give HYPE'}
           </Button>
-          <div className="flex items-center gap-2 text-lg font-bold">
+          <div className="flex items-center gap-2 text-lg font-bold animate-scale-in">
             <Flame className="w-5 h-5 text-accent" />
             {post.hype_count}
           </div>
@@ -118,6 +116,8 @@ export const PostCard = ({ post, currentUserId, onHypeGiven }: PostCardProps) =>
             {post.caption}
           </p>
         )}
+
+        <CommentsSection postId={post.id} currentUserId={currentUserId} />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Flame, Plus, User, Trophy } from "lucide-react";
+import { Flame, Plus, User, Trophy, Link2 } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface HeaderProps {
@@ -48,7 +48,6 @@ export const Header = ({ currentUserId }: HeaderProps) => {
           <span className="font-bold text-black">{hypeBalance}</span>
         </div>
 
-        {/* Navigation */}
         <div className="flex items-center gap-2">
           <Button
             size="icon"
@@ -58,6 +57,16 @@ export const Header = ({ currentUserId }: HeaderProps) => {
           >
             <Link to="/create">
               <Plus className="w-5 h-5" />
+            </Link>
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            asChild
+            className="rounded-full"
+          >
+            <Link to="/chains">
+              <Link2 className="w-5 h-5" />
             </Link>
           </Button>
           <Button

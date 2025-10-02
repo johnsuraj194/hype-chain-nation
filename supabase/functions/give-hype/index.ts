@@ -1,20 +1,23 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, {
+      status: 200,
+      headers: corsHeaders,
+    });
   }
 
   try {
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
       {
         global: {
           headers: { Authorization: req.headers.get("Authorization")! },
@@ -22,11 +25,11 @@ serve(async (req) => {
       }
     );
 
-    // Get authenticated user
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser();
+
     if (authError || !user) {
       throw new Error("Unauthorized");
     }
@@ -37,12 +40,10 @@ serve(async (req) => {
       throw new Error("Invalid parameters");
     }
 
-    // Check if user is trying to hype their own post
     if (user.id === to_user_id) {
       throw new Error("You cannot give HYPE to your own posts");
     }
 
-    // Start transaction by getting sender's balance with FOR UPDATE lock
     const { data: senderProfile, error: senderError } = await supabase
       .from("profiles")
       .select("hype_balance, total_hype_given")
@@ -51,20 +52,16 @@ serve(async (req) => {
 
     if (senderError) throw senderError;
 
-    // Check if sender has enough HYPE
     if (senderProfile.hype_balance < amount) {
       throw new Error("Insufficient HYPE balance");
     }
 
-    // Calculate splits (15% burned, 15% platform, 70% creator)
     const burnedAmount = Math.floor(amount * 0.15);
     const platformAmount = Math.floor(amount * 0.15);
     const creatorAmount = amount - burnedAmount - platformAmount;
 
-    // Generate unique transaction ID
     const transactionId = `${user.id}-${post_id}-${Date.now()}`;
 
-    // Update sender's balance
     const { error: senderUpdateError } = await supabase
       .from("profiles")
       .update({
@@ -75,7 +72,6 @@ serve(async (req) => {
 
     if (senderUpdateError) throw senderUpdateError;
 
-    // Get receiver's current balance
     const { data: receiverProfile, error: receiverFetchError } = await supabase
       .from("profiles")
       .select("hype_balance, total_hype_received")
@@ -84,7 +80,6 @@ serve(async (req) => {
 
     if (receiverFetchError) throw receiverFetchError;
 
-    // Update receiver's balance (give them the creator amount)
     const { error: receiverUpdateError } = await supabase
       .from("profiles")
       .update({
@@ -95,29 +90,19 @@ serve(async (req) => {
 
     if (receiverUpdateError) throw receiverUpdateError;
 
-    // Update post's hype_count
-    const { error: postUpdateError } = await supabase.rpc("increment_hype_count", {
-      post_id,
-      increment_by: amount,
-    });
+    const { data: currentPost } = await supabase
+      .from("posts")
+      .select("hype_count")
+      .eq("id", post_id)
+      .single();
 
-    // If RPC doesn't exist, use regular update
-    if (postUpdateError) {
-      const { data: currentPost } = await supabase
+    if (currentPost) {
+      await supabase
         .from("posts")
-        .select("hype_count")
-        .eq("id", post_id)
-        .single();
-
-      if (currentPost) {
-        await supabase
-          .from("posts")
-          .update({ hype_count: currentPost.hype_count + amount })
-          .eq("id", post_id);
-      }
+        .update({ hype_count: currentPost.hype_count + amount })
+        .eq("id", post_id);
     }
 
-    // Record transaction in ledger
     const { error: transactionError } = await supabase
       .from("hype_transactions")
       .insert({

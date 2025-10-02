@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Flame, LogOut, MapPin } from "lucide-react";
+import { Flame, LogOut, MapPin, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Profile {
@@ -98,7 +98,6 @@ const Profile = () => {
             <p className="text-sm mb-6">{profile.bio}</p>
           )}
 
-          {/* Stats */}
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="bg-gradient-hype rounded-xl p-4 text-center">
               <div className="flex items-center justify-center gap-1 mb-1">
@@ -117,14 +116,23 @@ const Profile = () => {
             </div>
           </div>
 
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="w-full gap-2"
-          >
-            <LogOut className="w-4 h-4" />
-            Sign Out
-          </Button>
+          <div className="space-y-3">
+            <Button
+              onClick={() => navigate("/profile/edit")}
+              className="w-full gap-2 bg-gradient-primary hover:opacity-90"
+            >
+              <Edit className="w-4 h-4" />
+              Edit Profile
+            </Button>
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              className="w-full gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </Button>
+          </div>
         </div>
       </main>
     </div>

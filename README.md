@@ -1,73 +1,216 @@
-# Welcome to your Lovable project
+# HypeChain - Social Platform with Scarce Currency
 
-## Project info
+A production-ready mobile-first social platform where users give each other HYPE, a limited in-app social currency. Built with React, TypeScript, Supabase, and modern web technologies.
 
-**URL**: https://lovable.dev/projects/a5347b81-07e5-4cd0-959e-17a7b4f82860
+## Project Overview
 
-## How can I edit this code?
+HypeChain is a unique social platform similar to Instagram or TikTok, but with a key difference: instead of unlimited "likes", users give each other HYPE tokens - a scarce resource that makes every interaction meaningful. Part of the HYPE given is burned, part goes to the platform, and the rest goes to the creator.
 
-There are several ways of editing your application.
+## Core Features
 
-**Use Lovable**
+### 1. Authentication & Profiles
+- Secure email/password authentication via Supabase Auth
+- User profiles with avatar, bio, city, state, and country
+- HYPE balance wallet for each user
+- Profile editing functionality
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a5347b81-07e5-4cd0-959e-17a7b4f82860) and start prompting.
+### 2. Posts & Media
+- Create posts with images and captions
+- Media stored in Supabase Storage
+- Posts display HYPE count and real-time updates
+- Comments system with real-time subscriptions
 
-Changes made via Lovable will be committed automatically to this repo.
+### 3. HYPE Economy
+- Each user starts with 100 HYPE tokens
+- Atomic HYPE transactions with balance locking
+- Distribution split: 15% burned, 15% platform, 70% creator
+- Ledger-based transaction system for auditability
+- Daily rewards system with streak bonuses (10 base + up to 12 streak bonus)
 
-**Use your preferred IDE**
+### 4. Leaderboards
+- Global leaderboard showing top HYPE earners
+- Filterable by Country, State, and City
+- Top 50 users displayed with rankings
+- Dynamic updates based on HYPE received
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 5. Hype Chains
+- Create themed chains (linked challenges/posts)
+- Track total HYPE across chain posts
+- Build epic stories collaboratively
+- Active/inactive chain states
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 6. Real-time Features
+- Live post updates via Supabase Realtime
+- Comment notifications
+- HYPE transaction notifications
+- Daily reward modal on login
 
-Follow these steps:
+### 7. Modern UI/UX
+- Dark theme with gradient accents
+- Smooth animations and transitions
+- Hover effects and micro-interactions
+- Mobile-first responsive design
+- Toast notifications for user feedback
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+## Tech Stack
+
+### Frontend
+- **React 18** with TypeScript
+- **Vite** for fast development and builds
+- **React Router** for navigation
+- **TanStack Query** for state management
+- **shadcn/ui** for UI components
+- **Tailwind CSS** for styling
+- **Lucide React** for icons
+
+### Backend
+- **Supabase** for:
+  - PostgreSQL database
+  - Authentication
+  - Real-time subscriptions
+  - Storage for media files
+  - Edge Functions (serverless)
+
+### Edge Functions
+- `give-hype` - Handles HYPE transactions with atomic operations
+- `claim-daily-reward` - Manages daily HYPE rewards and streaks
+
+## Database Schema
+
+### Tables
+- `profiles` - User profiles with HYPE balances
+- `posts` - User posts with media and HYPE counts
+- `hype_transactions` - Ledger for all HYPE transfers
+- `comments` - Post comments
+- `chains` - Hype Chain challenges
+- `chain_posts` - Links posts to chains
+- `daily_rewards` - Daily reward claims and streaks
+
+### Security
+- Row Level Security (RLS) enabled on all tables
+- Authenticated users only for sensitive operations
+- Ownership checks for updates/deletes
+- Public read access for appropriate data
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18+ and npm
+- Supabase account (free tier works)
+
+### Installation
+
+```bash
+# Clone the repository
 git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Set up environment variables
+# Create .env file with:
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Run database migrations
+# Migrations are in supabase/migrations/
+
+# Deploy edge functions
+# Functions are in supabase/functions/
+
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Build for Production
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+npm run build
+```
 
-**Use GitHub Codespaces**
+## Project Structure
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # shadcn/ui components
+│   ├── Header.tsx      # Main navigation header
+│   ├── PostCard.tsx    # Post display component
+│   ├── CommentsSection.tsx
+│   └── DailyRewardModal.tsx
+├── pages/              # Route pages
+│   ├── Auth.tsx        # Login/signup
+│   ├── Feed.tsx        # Main feed
+│   ├── CreatePost.tsx
+│   ├── Profile.tsx
+│   ├── EditProfile.tsx
+│   ├── Leaderboard.tsx
+│   ├── Chains.tsx
+│   └── CreateChain.tsx
+├── hooks/              # Custom React hooks
+│   ├── use-toast.ts
+│   └── use-notifications.tsx
+├── integrations/       # Supabase integration
+│   └── supabase/
+└── lib/                # Utility functions
 
-## What technologies are used for this project?
+supabase/
+├── functions/          # Edge Functions
+│   ├── give-hype/
+│   └── claim-daily-reward/
+└── migrations/         # Database migrations
+```
 
-This project is built with:
+## Key Features Implementation
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### HYPE Transaction Flow
+1. User clicks "Give HYPE" on a post
+2. Edge function validates user authentication
+3. Checks sender's HYPE balance
+4. Atomic transaction:
+   - Deducts from sender
+   - Calculates split (15%/15%/70%)
+   - Credits creator
+   - Records in ledger
+   - Updates post count
+5. Real-time UI update
 
-## How can I deploy this project?
+### Daily Rewards System
+- Base reward: 10 HYPE
+- Streak bonus: +2 HYPE per day (max 6 days = 12 bonus)
+- Modal auto-shows on first daily login
+- Tracks last claim date and streak days
 
-Simply open [Lovable](https://lovable.dev/projects/a5347b81-07e5-4cd0-959e-17a7b4f82860) and click on Share -> Publish.
+### Real-time Notifications
+- Subscribes to database changes
+- Notifies on HYPE received
+- Notifies on new comments
+- Toast-based notification system
 
-## Can I connect a custom domain to my Lovable project?
+## Future Enhancements
 
-Yes, you can!
+- [ ] Video post support
+- [ ] Push notifications via Firebase
+- [ ] Premium tier (Hype+)
+- [ ] Chain battles feature
+- [ ] AI content moderation
+- [ ] Payment integration for HYPE packs
+- [ ] AR effects and filters
+- [ ] Analytics dashboard
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Contributing
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+This is a production-ready scaffold. Contributions are welcome!
+
+## License
+
+MIT License - See LICENSE file for details
+
+## Support
+
+For issues or questions, please open an issue on GitHub.
+
+---
+
+Built with ❤️ using React, TypeScript, and Supabase

@@ -3,6 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { PostCard } from "@/components/PostCard";
 import { Header } from "@/components/Header";
+import { DailyRewardModal } from "@/components/DailyRewardModal";
+import { useNotifications } from "@/hooks/use-notifications";
 import { Loader2 } from "lucide-react";
 
 interface Post {
@@ -23,6 +25,8 @@ const Feed = () => {
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const navigate = useNavigate();
+
+  useNotifications(currentUser?.id);
 
   useEffect(() => {
     checkUser();
@@ -88,7 +92,8 @@ const Feed = () => {
   return (
     <div className="min-h-screen bg-gradient-subtle">
       <Header currentUserId={currentUser?.id} />
-      
+      <DailyRewardModal userId={currentUser?.id} />
+
       <main className="max-w-2xl mx-auto px-4 py-6 pb-24">
         {posts.length === 0 ? (
           <div className="text-center py-12">
