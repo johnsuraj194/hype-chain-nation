@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Flame, Trophy, Medal, Loader2 } from "lucide-react";
+import { Flame, Trophy, Medal, Loader as Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,

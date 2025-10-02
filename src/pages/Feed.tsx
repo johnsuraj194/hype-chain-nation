@@ -5,7 +5,7 @@ import { PostCard } from "@/components/PostCard";
 import { Header } from "@/components/Header";
 import { DailyRewardModal } from "@/components/DailyRewardModal";
 import { useNotifications } from "@/hooks/use-notifications";
-import { Loader2 } from "lucide-react";
+import { Loader as Loader2 } from "lucide-react";
 
 interface Post {
   id: string;

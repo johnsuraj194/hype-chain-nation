@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Flame, LogOut, MapPin, Edit } from "lucide-react";
+import { Flame, LogOut, MapPin, CreditCard as Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Profile {

@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
-import { Flame, Gift, Loader2 } from "lucide-react";
+import { Flame, Gift, Loader as Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface DailyRewardModalProps {

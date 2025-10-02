@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Link2, Flame, Plus, Loader2 } from "lucide-react";
+import { Link2, Flame, Plus, Loader as Loader2 } from "lucide-react";
 
 interface Chain {
   id: string;
